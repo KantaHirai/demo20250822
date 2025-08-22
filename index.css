@@ -1,3 +1,320 @@
-﻿body
-{
+﻿:root {
+    --bg-color: #fdeff2; /* 基調となる薄ピンク */
+    --text-color: #5c4742; /* 温かみのある茶色 */
+    --accent-color: #f5b9c6; /* アクセントのピンク */
+    --line-color: #e8c2ca; /* タイムラインの線の色 */
+    --white: #fff;
+    --font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+/* 基本設定 */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ヒーローセクション */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #f5b9c6, #fdeff2);
+}
+
+    .hero h1 {
+        font-size: 3rem;
+        margin: 0;
+        color: var(--white);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: var(--white);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+
+/* タイムライン */
+.timeline-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+    /* タイムラインの縦線 */
+    .timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 100%;
+        background-color: var(--line-color);
+        border-radius: 3px;
+    }
+
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    opacity: 0; /* 初期状態は非表示 */
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+    .timeline-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .timeline-item:nth-child(odd) {
+        left: 0;
+    }
+
+    .timeline-item:nth-child(even) {
+        left: 50%;
+    }
+
+    /* 年号のドット */
+    .timeline-item::after {
+        content: attr(data-year);
+        position: absolute;
+        top: 35px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background-color: var(--accent-color);
+        color: var(--white);
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+
+    .timeline-item:nth-child(odd)::after {
+        right: -40px; /* 左側アイテムのドットは右に */
+    }
+
+    .timeline-item:nth-child(even)::after {
+        left: -40px; /* 右側アイテムのドットは左に */
+    }
+
+
+.timeline-content {
+    padding: 20px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+    .timeline-content h2 {
+        margin-top: 0;
+        font-size: 1.5rem;
+        color: var(--accent-color);
+    }
+
+.photo-wrapper {
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin: 15px auto 0;
+    box-shadow: 0 0 0 5px var(--white), 0 0 0 8px var(--accent-color);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+    .photo-wrapper:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .photo-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+/* 手紙セクション */
+.letter-section {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+    .letter-section p {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+.letter-icon {
+    width: 70px;
+    height: 70px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+    .letter-icon:hover {
+        transform: scale(1.15);
+        animation-play-state: paused;
+    }
+
+    .letter-icon svg {
+        width: 40px;
+        height: 40px;
+        color: var(--white);
+    }
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-20px);
+    }
+
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+
+/* モーダル共通スタイル */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+    .modal.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+.modal-content {
+    position: relative;
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 90%;
+    max-height: 90%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transform: scale(0.7);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal.is-open .modal-content {
+    transform: scale(1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .close-btn:hover {
+        color: var(--text-color);
+    }
+
+#modal-image {
+    max-width: 100%;
+    max-height: 60vh;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+#modal-note {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+/* 手紙モーダル特有スタイル */
+.letter-modal .letter-content {
+    background: #fffaf0;
+    max-width: 500px;
+    text-align: left;
+    padding: 40px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.letter-body h3 {
+    text-align: center;
+    color: var(--accent-color);
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+}
+
+.letter-body .from {
+    text-align: right;
+    margin-top: 30px;
+    font-style: italic;
+}
+
+/* レスポンシブ対応 (スマホ用) */
+@media screen and (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .timeline::before {
+        left: 30px;
+    }
+
+    .timeline-item {
+        width: 100%;
+        padding-left: 80px;
+        padding-right: 15px;
+    }
+
+        .timeline-item:nth-child(even) {
+            left: 0%;
+        }
+
+        .timeline-item::after {
+            left: -10px;
+        }
 }
