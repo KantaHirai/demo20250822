@@ -24,26 +24,73 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. 写真クリックでモーダル表示 ---
     const photoWrappers = document.querySelectorAll('.photo-wrapper');
     const photoModal = document.getElementById('photo-modal');
+    const modalContent = photoModal.querySelector('.modal-content');
     const modalImage = document.getElementById('modal-image');
     const modalNote = document.getElementById('modal-note');
 
     photoWrappers.forEach(wrapper => {
         wrapper.addEventListener('click', () => {
+            // 1. クリックされた写真の位置とサイズを取得
+            const rect = wrapper.getBoundingClientRect();
+
+            // 2. ポップアップの初期位置をクリックされた写真の位置に設定
+            //    (window.scrollYを加えることで、スクロール量を考慮する)
+            modalContent.style.top = `${rect.top + window.scrollY}px`;
+            modalContent.style.left = `${rect.left}px`;
+            modalContent.style.width = `${rect.width}px`;
+            modalContent.style.height = `${rect.height}px`;
+
+            // 3. 画像とメモの内容を設定
             const originalImageSrc = wrapper.querySelector('img').src;
             const note = wrapper.dataset.note;
-
             modalImage.src = originalImageSrc;
             modalNote.textContent = note;
+
+            // 4. まず背景のオーバーレイを表示
             photoModal.classList.add('is-open');
+            document.body.classList.add('body-no-scroll');
+
+            // 5. 少し間を置いてから、最終的な表示位置とサイズにアニメーションさせる
+            setTimeout(() => {
+                // 画面の真ん中に、より大きく表示されるようにスタイルを設定
+                const finalWidth = Math.min(window.innerWidth * 0.8, 600); // 最大600px
+                modalContent.style.width = `${finalWidth}px`;
+                modalContent.style.height = 'auto'; // 高さは自動調整
+                modalContent.style.top = `${window.innerHeight / 2 + window.scrollY}px`;
+                modalContent.style.left = `${window.innerWidth / 2}px`;
+                // 中央に配置するための微調整
+                modalContent.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 10); // わずかな遅延でアニメーションをトリガー
         });
     });
 
     // --- 3. 手紙アイコンクリックでモーダル表示 ---
     const letterIcon = document.getElementById('letter-icon');
     const letterModal = document.getElementById('letter-modal');
+    const letterContent = letterModal.querySelector('.modal-content');
 
     letterIcon.addEventListener('click', () => {
+
+        const rect = letterIcon.getBoundingClientRect();
+
+        // 2. ポップアップの初期位置をアイコンの位置に設定
+        letterContent.style.top = `${rect.top + window.scrollY}px`;
+        letterContent.style.left = `${rect.left}px`;
+        letterContent.style.width = `${rect.width}px`;
+        letterContent.style.height = `${rect.height}px`;
+
         letterModal.classList.add('is-open');
+        document.body.classList.add('body-no-scroll');
+
+        // 4. 少し間を置いてから、最終的な表示位置とサイズにアニメーションさせる
+        setTimeout(() => {
+            const finalWidth = Math.min(window.innerWidth * 0.9, 500); // 最大500px
+            letterContent.style.width = `${finalWidth}px`;
+            letterContent.style.height = 'auto';
+            letterContent.style.top = `${window.innerHeight / 2 + window.scrollY}px`;
+            letterContent.style.left = `${window.innerWidth / 2}px`;
+            letterContent.style.transform = 'translate(-50%, -50%) scale(1)';
+        }, 10);
     });
 
     // --- 4. モーダルを閉じる処理 (共通) ---
