@@ -1,25 +1,27 @@
+// ãƒšãƒ¼ã‚¸ã®èª­ã¿è¾¼ã¿ãŒå®Œäº†ã—ãŸã‚‰ã€ä¸­ã®å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. ƒXƒNƒ[ƒ‹‚Å—v‘f‚ğ‚Ó‚í‚Á‚Æ•\¦ ---
+    document.body.classList.add('is-loaded');
+
+    // --- 1. ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã§è¦ç´ ã‚’ãµã‚ã£ã¨è¡¨ç¤º ---
     const timelineItems = document.querySelectorAll('.timeline-item');
 
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target); // ˆê“x•\¦‚µ‚½‚çŠÄ‹‚ğ~‚ß‚é
+                observer.unobserve(entry.target);
             }
         });
     }, {
-        threshold: 0.1 // 10%Œ©‚¦‚½‚ç”­“®
+        threshold: 0.1
     });
 
     timelineItems.forEach(item => {
         observer.observe(item);
     });
 
-
-    // --- 2. Ê^ƒNƒŠƒbƒN‚Åƒ‚[ƒ_ƒ‹•\¦ ---
+    // --- 2. å†™çœŸã‚¯ãƒªãƒƒã‚¯ã§ãƒ¢ãƒ¼ãƒ€ãƒ«è¡¨ç¤º ---
     const photoWrappers = document.querySelectorAll('.photo-wrapper');
     const photoModal = document.getElementById('photo-modal');
     const modalImage = document.getElementById('modal-image');
@@ -36,8 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
-    // --- 3. è†ƒAƒCƒRƒ“ƒNƒŠƒbƒN‚Åƒ‚[ƒ_ƒ‹•\¦ ---
+    // --- 3. æ‰‹ç´™ã‚¢ã‚¤ã‚³ãƒ³ã‚¯ãƒªãƒƒã‚¯ã§ãƒ¢ãƒ¼ãƒ€ãƒ«è¡¨ç¤º ---
     const letterIcon = document.getElementById('letter-icon');
     const letterModal = document.getElementById('letter-modal');
 
@@ -45,19 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
         letterModal.classList.add('is-open');
     });
 
-
-    // --- 4. ƒ‚[ƒ_ƒ‹‚ğ•Â‚¶‚éˆ— (‹¤’Ê) ---
+    // --- 4. ãƒ¢ãƒ¼ãƒ€ãƒ«ã‚’é–‰ã˜ã‚‹å‡¦ç† (å…±é€š) ---
     const closeButtons = document.querySelectorAll('.close-btn');
     const modals = document.querySelectorAll('.modal');
 
-    // •Â‚¶‚éƒ{ƒ^ƒ“‚Å•Â‚¶‚é
     closeButtons.forEach(button => {
         button.addEventListener('click', () => {
             button.closest('.modal').classList.remove('is-open');
         });
     });
 
-    // ƒ‚[ƒ_ƒ‹‚ÌŠO‘¤‚ğƒNƒŠƒbƒN‚Å•Â‚¶‚é
     modals.forEach(modal => {
         modal.addEventListener('click', (event) => {
             if (event.target === modal) {
@@ -66,4 +64,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- 5. èŠ±ã³ã‚‰ã‚’ç”Ÿæˆã™ã‚‹å‡¦ç† ---
+    const petalContainer = document.getElementById('petal-container');
+    if (petalContainer) { // petalContainerãŒå­˜åœ¨ã™ã‚‹å ´åˆã®ã¿å®Ÿè¡Œ
+        const numberOfPetals = 30; // èŠ±ã³ã‚‰ã®æ•°
+
+        for (let i = 0; i < numberOfPetals; i++) {
+            createPetal();
+        }
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+
+            const size = Math.random() * 10 + 5;
+            const startPosition = Math.random() * 100;
+            const fallDuration = Math.random() * 5 + 8;
+            const fallDelay = Math.random() * 10;
+
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${startPosition}vw`;
+            petal.style.animationDuration = `${fallDuration}s`;
+            petal.style.animationDelay = `${fallDelay}s`;
+
+            if (Math.random() > 0.5) {
+                petal.style.animationName = 'fall, sway-left';
+            } else {
+                petal.style.animationName = 'fall, sway-right';
+            }
+
+            petalContainer.appendChild(petal);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sway-left {
+                0% { margin-left: 0px; }
+                100% { margin-left: -50px; }
+            }
+            @keyframes sway-right {
+                0% { margin-left: 0px; }
+                100% { margin-left: 50px; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 });
